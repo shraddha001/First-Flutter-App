@@ -11,7 +11,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0; // Initially selected index
+  int selectedItemIndex = 0;
+
+  // List of widgets for each page
   static const List<Widget> _widgetOptions = <Widget>[
     HomeContent(),
     Text('Search'),
@@ -19,36 +21,42 @@ class _HomePageState extends State<HomePage> {
     Text('Premium'),
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        margin: const EdgeInsets.only(right: 12, top: 32, left: 6),
-        child: IndexedStack(
-          // Use IndexedStack to switch between pages
-          index: _selectedIndex,
-          children: _widgetOptions,
-        ),
-      ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.purple,
         unselectedItemColor: Colors.grey,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        selectedLabelStyle: const TextStyle(
+            fontSize: 14,
+            fontFamily: 'Roboto_Medium',
+            letterSpacing: 1,
+            fontWeight: FontWeight.w500),
+        currentIndex: selectedItemIndex,
+        onTap: (value) => {
+          setState(() {
+            selectedItemIndex = value;
+          })
+        },
+        items: const [
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+                size: 24,
+              ),
+              label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.library_add_rounded), label: 'Your Library'),
+              icon: Icon(Icons.library_add_check_outlined), label: 'Liabrary'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.subscriptions), label: 'Premium'),
+              icon: Icon(Icons.subscriptions_outlined), label: 'Premium'),
         ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+      ),
+      body: IndexedStack(
+        index: selectedItemIndex,
+        children: _widgetOptions,
       ),
     );
   }

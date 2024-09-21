@@ -1,11 +1,24 @@
+import 'package:dio/dio.dart';
 import 'package:first_flutter_app/forgot_password_page.dart';
 import 'package:first_flutter_app/home.dart';
 import 'package:first_flutter_app/signup_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:sizer/sizer.dart';
+final storage = new FlutterSecureStorage();
 void main() {
-  runApp(const MyApp());
+  // runApp(const MyApp());
+  runApp(
+    ResponsiveSizer(
+      builder: (context, orientation, deviceType) {
+        return MaterialApp(
+          // ... your MaterialApp configuration ...
+          home: MyApp(), // Your home screen widget
+        );
+      },
+    ),
+  );
 }
 
 void hideKeyboard() {
@@ -63,6 +76,38 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  Future<void> fetchTokenData() async {
+    const url = "https://accounts.spotify.com/api/token";
+    Map<String, String> headers = {
+      "Content-Type": "application/x-www-form-urlencoded"
+    };
+    try {
+      var response = await Dio()
+          .request<Map<String, dynamic>>(url, // Specify the response type
+              queryParameters: <String, dynamic>{
+                'grant_type': 'client_credentials',
+                'client_id': 'a2ac1b4ab4cf43b094a2dd288b37a907',
+                'client_secret': '6772d3b47f2f414eb81397dfd7532de0'
+              },
+              options: Options(method: "POST", headers: headers));
+
+      if (response.statusCode == 200) {
+        String accessToken = response.data?["access_token"] ??
+            ""; // Access token with null check
+        print(">>>>>>>>>>>>>>>>>> SUCESS >>> $accessToken");
+        await storage.write(key: 'token', value: accessToken);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const HomePage()));
+      } else {
+        print(
+            ">>>>>>>>>>>>>>>>>>FAIL ${response.statusCode}"); // Print status code on failure
+      }
+    } catch (e) {
+      print(">>>>>>>>>>>>>>>>>>>>>>>>> CATCH $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final myTextEditingController = TextEditingController(text: '');
@@ -275,11 +320,8 @@ class _MyHomePageState extends State<MyHomePage> {
               child: ElevatedButton(
                   onPressed: () {
                     // todo on submit
+                    fetchTokenData();
                     hideKeyboard();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const HomePage()));
                   },
                   style: ButtonStyle(
                       backgroundColor:

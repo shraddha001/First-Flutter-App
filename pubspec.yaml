@@ -28,13 +28,17 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  dio: ^5.4.0
+  sizer: ^3.0.3
   flutter:
     sdk: flutter
+
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
+  flutter_secure_storage: ^9.2.2
 
 dev_dependencies:
   flutter_test:
@@ -45,7 +49,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.0
+  flutter_lints: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -94,6 +98,9 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   fonts:
+    - family: Suse-Medium
+      fonts:
+        - asset: fonts/Suse_Medium.ttf
     - family: RobotoSerif-ExtraLight
       fonts:
         - asset: fonts/RobotoSerif_ExtraLight.ttf
@@ -109,6 +116,3 @@ flutter:
     - family: RobotoSerif-Italic
       fonts:
         - asset: fonts/RobotoSerif-Italic.ttf
-    - family: Suse-Medium
-      fonts:
-        - asset: fonts/Suse-Medium.ttf
